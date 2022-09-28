@@ -1,0 +1,8 @@
+{
+    "root": "./docs/",
+    "title": "CSRF完全入門",
+    "structure": {
+        "readme": "intoroduction.md",
+        "summary": "_SUMMARY.md"
+    } 
+}
