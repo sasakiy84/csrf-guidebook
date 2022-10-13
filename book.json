@@ -4,5 +4,8 @@
     "structure": {
         "readme": "intoroduction.md",
         "summary": "_SUMMARY.md"
-    } 
+    },
+    "styles": {
+        "website": "styles/custom.css"
+    }
 }
