@@ -11,5 +11,11 @@
   "license": "ISC",
   "devDependencies": {
     "honkit": "^4.0.0"
+  },
+  "dependencies": {
+    "gitbook-plugin-anchors": "^0.7.1",
+    "gitbook-plugin-hide-published-with": "^0.0.1",
+    "gitbook-plugin-hints": "^1.0.2",
+    "gitbook-plugin-navigator": "^1.1.1"
   }
 }

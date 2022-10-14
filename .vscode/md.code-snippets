@@ -1,0 +1,49 @@
+{
+	// Place your csrf-guidebook workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	"hint info": {
+		"scope": "markdown",
+		"prefix": "hint-info",
+		"body": [
+			"{% hint style='info' %}",
+			"$2",
+			"{% endhint %}",
+		],
+		"description": "hint plugin :: info"
+	},
+	"hint working": {
+		"scope": "markdown",
+		"prefix": "hint-working",
+		"body": [
+			"{% hint style='working' %}",
+			"$2",
+			"{% endhint %}",
+		],
+		"description": "hint plugin :: working"
+	},
+	"hint danger": {
+		"scope": "markdown",
+		"prefix": "hint-danger",
+		"body": [
+			"{% hint style='danger' %}",
+			"$2",
+			"{% endhint %}",
+		],
+		"description": "hint plugin :: danger"
+	},
+	"hint tip": {
+		"scope": "markdown",
+		"prefix": "hint-tip",
+		"body": [
+			"{% hint style='tip' %}",
+			"$2",
+			"{% endhint %}",
+		],
+		"description": "hint plugin :: tip"
+	},
+}
