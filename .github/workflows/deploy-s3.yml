@@ -1,0 +1,26 @@
+name: deploy to s3
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checout
+        uses: actions/checkout@v2
+
+      - name: module install
+        run: npm install
+
+      - name: Build Index Json
+        run: npm run build
+
+      - name: Deploy to s3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: aws s3 sync --delete --region ap-northeast-1 _book/ s3://csrf-guidebook.sasakiy84.net
