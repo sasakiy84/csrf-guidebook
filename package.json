@@ -13,6 +13,7 @@
     "honkit": "^4.0.0"
   },
   "dependencies": {
+    "@honkit/honkit-plugin-ga": "^1.0.1",
     "gitbook-plugin-anchors": "^0.7.1",
     "gitbook-plugin-hide-published-with": "^0.0.1",
     "gitbook-plugin-hints": "^1.0.2",

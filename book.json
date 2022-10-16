@@ -12,6 +12,13 @@
         "navigator",
         "hide-published-with",
         "anchors",
-        "hints"
-    ]
+        "hints",
+        "@honkit/honkit-plugin-ga"
+    ],
+    "pluginsConfig": {
+        "ga": {
+            "trackingID": "G-YY41MHZZ6X",
+            "anonymizeIP": true
+        }
+    }
 }
