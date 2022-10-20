@@ -1,11 +1,13 @@
 # どこから送信されたリクエストかを見る
 
-この節では、リクエストが本当に正規のウェブサイトから送信されたのかを検証する方法として、送信元に紐づいた情報を確認してみます。そして、その危険性も確認します。
+この節では、リクエストが本当に正規のウェブサイトから送信されたのか、ということを検証する方法として、送信元に紐づいた情報を確認してみます。そして、その危険性も確認します。
 
 ## Referer を確認する
 
-HTTP ヘッダのひとつに `Referer`というヘッダがあります。このヘッダには、リクエストを送信したページの URL が格納されています。たとえば、http://example1.com/1 にある、http://example2.net/2 へのリンクをクリックしたときに、http://example2.net/2 へ GET リクエストが送られますが、そのリクエストの`Referer`ヘッダには、http://example1.com/1 という値が格納されています。
+HTTP ヘッダのひとつに `Referer`というヘッダがあります。
+このヘッダには、リクエストを送信したページの URL が格納されています。たとえば、`http://example1.com/1` にある、`http://example2.net/2` へのリンクをクリックしたときに、`http://example2.net/2` へ GET リクエストが送られますが、そのリクエストの`Referer`ヘッダには、`http://example1.com/1` という値が格納されています。
 
+MDN の解説
 https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Referer
 
 express では以下のようなコードで Referer を取得できます。
@@ -16,7 +18,9 @@ const referer = req.get("Referer");
 
 この Referer を確認すれば、CSRF の防御になるでしょうか。Referer が完全に信頼できる値であった場合は、防御できるでしょう。しかし、いくつか懸念点があります。
 
-一点目は、Referer を送信しないようにしているユーザーがいることです。開発者側からすれば、Referer を使えば、サイトの流入経路を分析できます。一方で、ユーザーからすれば、自分の見ていたサイトが第三者にわたる可能性があるので、プライバシーの問題があります。ユーザーがプライバシーのために Referer を送信しない設定をしていた場合、サイトを正常に動かすために Referer がないリクエストは検証せずに通すという対応が考えられますが、これでは CSRF の防御になりません。
+一点目は、Referer を送信しないようにしているユーザーがいることです。
+開発者側からすれば、Referer を使えば、サイトの流入経路を分析できます。一方で、ユーザーからすれば、自分の見ていたサイトが第三者にわたる可能性があるので、プライバシーの問題があります。
+つまり、ユーザーがプライバシーのために Referer を送信しない設定をしている場合が考えられるのです。このような場合は、サイトを正常に動かすために Referer がないリクエストは検証せずに通すという対応が考えられますが、これでは CSRF の防御になりません。
 
 Referer を CSRF の防御に使用することについては、RFC にも記述があり、Referer がすべてのリクエストに含まれているわけではないことが明示されています。
 
@@ -28,14 +32,15 @@ Referer を CSRF の防御に使用することについては、RFC にも記�
 > An intermediary SHOULD NOT modify or delete the Referer header field when the field value shares the same scheme and host as the request target.
 > https://datatracker.ietf.org/doc/html/rfc7231#section-5.5.2
 
-二点目は、Referer が信頼できない可能性が、csrf token の方式に比べると相対的に高いということです。HTTP ヘッダに関する脆弱性などがあった場合に、攻撃者が有効な値を推測して攻撃を行うことができます。
+二点目は、Referer が信頼できない可能性が、csrf token の方式に比べると相対的に高いということです。
+HTTP ヘッダに任意に値を設定できる脆弱性などがあった場合に、攻撃者が有効な値を推測して攻撃を行うことができます。
 
 ## Origin を確認する
 
 Origin は、HTTP ヘッダのひとつで、リクエストの送信元のスキームとドメイン名が含まれます。
 https://developer.mozilla.org/ja/docs/Web/HTTP/Headers/Origin
 
-このヘッダは、GET リクエストのときには送信されず、POST リクエストのときなどに送信されます。たとえば、http://example1.com/1 にある、http://example2.net/2 に submit するボタンをクリックしたときに、http://example2.net/2 へ POST リクエストが送られますが、そのリクエストの Origin には、http://example1.com という値が格納されています。
+このヘッダは、GET リクエストのときには送信されず、POST リクエストのときなどに送信されます。たとえば、`http://example1.com/1` にある、`http://example2.net/2` に submit するボタンをクリックしたときに、`http://example2.net/2` へ POST リクエストが送られますが、そのリクエストの Origin には、`http://example1.com` という値が格納されています。
 
 express では、以下のように Origin が取得できます。
 
@@ -48,16 +53,16 @@ const origin = req.get("Origin");
 一点目は、有効な値が推測可能なため、HTTP ヘッダに関する脆弱性などがあった場合に、攻撃者が有効な値を推測して攻撃を行うことができるという点です。そして、実際にそのような脆弱性が次のブログで紹介されています。
 https://blog.jxck.io/entries/2018-10-26/same-site-cookie.html#csrf
 
-例に挙げられている脆弱性
+例に挙げられている脆弱性は、以下のようなものです（未検証）
 https://insert-script.blogspot.jp/2018/05/adobe-reader-pdf-client-side-request.html
 
-二点目は、サーバー側が自分の Origin を知っていなければいけないという制約です。これは、以下のブログで指摘されていた点ですが、自分はあまり具体的な事例が思いつきませんでした。
+二点目は、サーバー側が自分の Origin を知っていなければいけないという制約です。これは、以下のブログで指摘されていた点ですが、自分はあまり具体的な事例が思いつきませんでした。たとえば、ngrok や google app script で API を公開している場合は、ランダムでオリジンが割り当てられます。しかし、そのような簡易的なサイトで CSRF 対策が必要なものを公開するような可能性は低いように思います。
 http://var.blog.jp/archives/86138542.html#Origin
 
 ## 独自ヘッダを入れる
 
 これは、正規のサイトから送信されるリクエストに、開発者が定義した独自ヘッダを入れて、サーバー側で独自ヘッダを検証するという方法です。
-なお、フォームでは独自ヘッダを送信することができないため、`HttpXMLRequest`や`fetch`などを使って、javascript でリクエストを送るときしか使えません。
+なお、フォームでは独自ヘッダを送信することができないため、`HttpXMLRequest`や`fetch`などを使って、JavaScript でリクエストを送るときしか使えません。
 具体的には、以下のようにします。
 
 ```ts
@@ -92,7 +97,7 @@ http://localhost:4000/4-prepare-custom-header
 このように、カスタムヘッダを使った防御への攻撃が失敗することがわかりました。では、なぜ失敗したのでしょうか。
 
 ブラウザは、CORS (Cross-Origin Resource Sharing / オリジン間リソース共有) という仕組みを実装しています。この仕組みは、一般に SOP(Same-Origin Policy / 同一オリジンポリシー) によって実施されている、異なるオリジン間での通信制限を緩和するものです。
-その仕組みの一つに、プリフライトリクエストというものがあります。これは、危険なリクエストを送る前に送信先のサーバーにブラウザがそのリクエストを送信してもいいかお伺いを立てるためのリクエストです。
+その緩和の仕組みの一つに、プリフライトリクエストというものがあります。これは、危険なリクエストを送る前に送信先のサーバーにブラウザがそのリクエストを送信してもいいかお伺いを立てるためのリクエストです。
 
 先ほどの失敗したエラーの内容をコンソールでみると、以下のように書いてあります
 
@@ -102,10 +107,13 @@ http://localhost:4000/4-prepare-custom-header
 
 プリフライトリクエストは、異なるオリジン間での通信で、特定の条件が満たされたときにだけ発行されます。今回の場合は、「POST であり、独自ヘッダがついていた」ため、プリフライトリクエストが送信されました。もしカスタムヘッダがついていなかったら、プリフライトリクエストは送信されません。
 
+プリフライトリクエストの詳細については、以下の MDN のページを参考にしてください。
+https://developer.mozilla.org/ja/docs/Web/HTTP/CORS#preflighted_requests
+
 ### 独自ヘッダのまとめ
 
-以上のことから、基本的には独自ヘッダを用いた検証は効力を発揮します。一方で、制限やリスクがあるのも事実です。
-まず制限としては、カスタムヘッダを送信するためには javascript を使う必要があるということです。フォームを使った場合の CSRF 対策には使えません。
+以上のことから、JavaScript を使ったリクエスト送信において、基本的には独自ヘッダを用いた検証は効力を発揮します。一方で、制限やリスクがあるのも事実です。
+まず制限としては、フォームを使った場合の CSRF 対策には使えません。カスタムヘッダを送信するためには JavaScript を使う必要があるためです。
 次にリスクとしては、HTTP ヘッダの脆弱性が存在した場合、無力になるということです。これは、Referer や Origin と同じです。
 
 ### CORS について
@@ -145,4 +153,12 @@ https://w3c.github.io/webappsec-fetch-metadata/#framework
 http://localhost:3000/4-prepare-custom-header
 
 サーバー側のログに、各種ヘッダが出力されていると思います。
+
+```
+referer: http://localhost:3000/4-prepare-custom-header
+origin: http://localhost:3000
+is custom header exists: true
+Sec-Fetch-Site: same-origin
+```
+
 なお、 http://localhost:4000 からリクエストを送った場合は、`Sec-Fetch-Site`の値が`cross-site`ではなく、`same-site`になることに注意してください。ポート番号のみが違う場合は、`same-site`になります。
