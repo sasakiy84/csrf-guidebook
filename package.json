@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "honkit serve",
+    "serve": "honkit serve --port 5000",
     "build": "honkit build"
   },
   "author": "",
