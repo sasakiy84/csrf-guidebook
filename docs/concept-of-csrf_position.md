@@ -14,7 +14,7 @@ CVE において、CSRF は "Insufficient Verification of Data Authenticity" (�
 
 ### 安全なウェブサイトの作り方
 
-https://www.ipa.go.jp/files/000017316.pdf#page=32
+https://www.ipa.go.jp/security/vuln/websecurity/ug65p900000196e2-att/000017316.pdf#page=32
 
 『安全なウェブサイトの作り方』は、IPA が公開する資料です。
 「IPA が届出を受けた脆弱性関連情報を基に、届出件数の多かった脆弱性や攻撃による影響度が大きい脆弱性を取り上げ、ウェブサイト開発者や運営者が適切なセキュリティを考慮したウェブサイトを作成」できるようにすることを目的としています。
